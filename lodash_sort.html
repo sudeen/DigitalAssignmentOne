@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.20/lodash.js"
+    integrity="sha512-HBD0cOZJYcymSn0H0CnN3VBhQLdiH8imucm16ZQ792TT2n48u6nmX+T7hZTCwmzIrgMt76x4rHhR7KkZqhIGxA=="
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <textarea id="view" cols=100 rows=10></textarea>
+
+  <script type="text/javascript">
+    const payeeList = [
+      {
+        name: "Mary",
+        payeeType: "PAY_ANYONE",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Zachary",
+        payeeType: "BPAY",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Andy",
+        payeeType: "BPAY",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Sam",
+        payeeType: "LINKED",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "John",
+        payeeType: "BPAY",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Alex",
+        payeeType: "PAY_ANYONE",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Zac",
+        payeeType: "LINKED",
+        primary: { isPrimary: true },
+      },
+      {
+        name: "Angela",
+        payeeType: "LINKED",
+        primary: { isPrimary: false },
+      },
+      {
+        name: "Ben",
+        payeeType: "PAY_ANYONE",
+        primary: { isPrimary: false },
+      },
+    ]
+
+    const orderPriorityByType = { 'PAY_ANYONE': 0, 'LINKED': 1, 'BPAY': 2 }
+
+    const sortByIsPrimary = (list) => _.sortBy(list, (o) => !o.primary.isPrimary)
+
+    const orderByType = (list) => _.orderBy(list, (o) => orderPriorityByType[o.payeeType])
+
+    const sortByName = (list) => _.sortBy(list, (o) => o.name)
+
+    const reduceByPrimary = (list) => _.reduce(sortByIsPrimary(list), (r, v) => {
+      (r[v.primary.isPrimary] || (r[v.primary.isPrimary] = [])).push(v);
+      return r
+    }, {});
+
+    const reduceByPayeeType = (list) => _.reduce(list, (r, v) => {
+      (r[v.payeeType] || (r[v.payeeType] = [])).push(v);
+      return r
+    }, {});
+
+    const sortedArray = _.map(reduceByPrimary(payeeList), (o) => {
+      return _.map(reduceByPayeeType(orderByType(o)), t => sortByName(t))
+    })
+
+    const sortingValues = () => {
+      return _.flattenDepth(sortedArray, 3)
+    }
+
+    document.getElementById('view').value = JSON.stringify(sortingValues())
+  </script>
+</body>
+
+</html>

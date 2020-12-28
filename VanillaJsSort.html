@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <!-- <script type="text/javascript" src="./zzz.js"></script> -->
+  </head>
+  <body>
+    <textarea id="view" cols=50 rows=25></textarea>
+    <script type="text/javascript">
+      const payeeList = [
+        {
+          name: "Mary",
+          payeeType: "PAY_ANYONE",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Zachary",
+          payeeType: "BPAY",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Andy",
+          payeeType: "BPAY",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Sam",
+          payeeType: "LINKED",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "John",
+          payeeType: "BPAY",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Alex",
+          payeeType: "PAY_ANYONE",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Zac",
+          payeeType: "LINKED",
+          primary: { isPrimary: true },
+        },
+        {
+          name: "Angela",
+          payeeType: "LINKED",
+          primary: { isPrimary: false },
+        },
+        {
+          name: "Ben",
+          payeeType: "PAY_ANYONE",
+          primary: { isPrimary: false },
+        },
+      ]
+
+      const sortingValues = () => {
+         return payeeList.sort((x, y) => {
+             return checkIsPrimaryTrue(x, y) || checkPayeeTypeIsLinked(x, y) && checkPayeeTypeIsBpay(x, y) && checkPayeeTypeIsPayAnyone(x,y)
+        })
+      }
+
+      const checkIsPrimaryTrue = (x, y) => {
+        return (x.primary.isPrimary === y.primary.isPrimary) ? 0 : y.primary.isPrimary ? 1 : -1
+      }
+
+      const checkPayeeTypeIsLinked = (x, y) => {
+        return (x.payeeType === y.payeeType) ? 0 : y.payeeType === 'LINKED' ? 1 : -1
+      }
+
+      const checkPayeeTypeIsBpay = (x, y) => {
+        return (x.payeeType === y.payeeType) ? 0 : y.payeeType === 'BPAY' ? 1 : -1
+      }
+
+	    const checkPayeeTypeIsPayAnyone = (x, y) => {
+        	return (x.payeeType === y.payeeType) ? 0 : y.payeeType === 'PAY_ANYONE' ? 1 : -1
+      }
+
+      document.getElementById('view').value = JSON.stringify(sortingValues())
+    </script>
+  </body>
+</html>
